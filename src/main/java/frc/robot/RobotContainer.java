@@ -89,7 +89,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // prepare the camera
-    cameraInit();
+    // removed for characterization
+    // cameraInit();
 
     // drive command to split-stick arcade drive
     // split stick is left and right sticks on the XBox
