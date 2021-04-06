@@ -7,7 +7,13 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -20,6 +26,31 @@ import edu.wpi.first.wpilibj.XboxController;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // auto for Ramsete
+    public static final class rAutoConstants {
+        public static final double kMaxSpeedMetersPerSecond = 0.4; // was 0.8
+        public static final double kMaxAccelerationMetersPerSecondSquared = 0.30; // was 0.8
+    
+        // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+        public static final double kRamseteB = 2.0;
+        public static final double kRamseteZeta = 0.7;
+    }
+    // auto trajectory
+    public static final class rTrajectoryConstants {
+        private static final double kWheelDiameterMeter = 0.070;
+        public static final double kWheelDiameter = kWheelDiameterMeter;
+        public static final List<Translation2d> pathApartAPoints = List.of(
+                new Translation2d(Units.inchesToMeters(+16.0), Units.inchesToMeters(+16.0)),
+                new Translation2d(Units.inchesToMeters(+22.0), Units.inchesToMeters(+10.0))
+                );
+        public static final Pose2d pathApartAstartPose =
+                new Pose2d(Units.inchesToMeters(-13.5), Units.inchesToMeters(+4.5), new Rotation2d(Units.degreesToRadians(-90)));
+        public static final Pose2d pathApartAendPose = 
+                new Pose2d(Units.inchesToMeters(+11.0), Units.inchesToMeters(-3.1), new Rotation2d(Units.degreesToRadians(-90)));
+          
+    }
+
+
     // on / off switches
     public static boolean currentIntakeState = false;
     public static boolean cameraState = false;
