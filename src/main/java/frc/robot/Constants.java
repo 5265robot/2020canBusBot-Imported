@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
 
 /**
@@ -28,27 +29,78 @@ import edu.wpi.first.wpilibj.util.Units;
 public final class Constants {
     // auto for Ramsete
     public static final class rAutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 0.4; // was 0.8
-        public static final double kMaxAccelerationMetersPerSecondSquared = 0.30; // was 0.8
+        public static final double kMaxSpeedMetersPerSecond = 0.8; // was 0.8
+        public static final double kMaxAccelerationMetersPerSecondSquared = 0.80; // was 0.8
     
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;
         public static final double kRamseteZeta = 0.7;
     }
     // auto trajectory
-    public static final class rTrajectoryConstants {
-        private static final double kWheelDiameterMeter = 0.070;
+    public static final class TrajectoryConstants {
+        private static final double kWheelDiameterMeter = Units.inchesToMeters(7.25);
         public static final double kWheelDiameter = kWheelDiameterMeter;
+
+    //Path 1 Points:
         public static final List<Translation2d> pathApartAPoints = List.of(
-                new Translation2d(Units.inchesToMeters(+16.0), Units.inchesToMeters(+16.0)),
+                new Translation2d(Units.inchesToMeters(+30.0), Units.inchesToMeters(+16.0)),
                 new Translation2d(Units.inchesToMeters(+22.0), Units.inchesToMeters(+10.0))
                 );
+
+        public static final List<Translation2d> pathApartBPoints = List.of(
+                new Translation2d(Units.inchesToMeters(+16.0), Units.inchesToMeters(+16.0)),
+                new Translation2d(Units.inchesToMeters(+16.0), Units.inchesToMeters(+16.0)),
+                new Translation2d(Units.inchesToMeters(+22.0), Units.inchesToMeters(+10.0))
+        );
+        public static final List<Translation2d> pathApartCPoints = List.of(
+                new Translation2d(Units.inchesToMeters(+16.0), Units.inchesToMeters(+16.0)),
+                new Translation2d(Units.inchesToMeters(+16.0), Units.inchesToMeters(+16.0)),
+                new Translation2d(Units.inchesToMeters(+22.0), Units.inchesToMeters(+10.0))
+        );
+
+
+    //Pose Start+End PartA:
         public static final Pose2d pathApartAstartPose =
-                new Pose2d(Units.inchesToMeters(-13.5), Units.inchesToMeters(+4.5), new Rotation2d(Units.degreesToRadians(-90)));
+                new Pose2d(Units.inchesToMeters(+90.0), Units.inchesToMeters(+30.0), new Rotation2d(Units.degreesToRadians(-90)));
         public static final Pose2d pathApartAendPose = 
-                new Pose2d(Units.inchesToMeters(+11.0), Units.inchesToMeters(-3.1), new Rotation2d(Units.degreesToRadians(-90)));
-          
+                new Pose2d(Units.inchesToMeters(+90.0), Units.inchesToMeters(+138.0), new Rotation2d(Units.degreesToRadians(-90)));
+
+    //Pose Start+End PartB:
+        public static final Pose2d pathApartBstartPose =
+                new Pose2d(Units.inchesToMeters(+96.0), Units.inchesToMeters(+174.0), new Rotation2d(Units.degreesToRadians(-90)));
+        public static final Pose2d pathApartBendPose = 
+                new Pose2d(Units.inchesToMeters(+90.0), Units.inchesToMeters(+222.0), new Rotation2d(Units.degreesToRadians(-90)));
+    
+    //Pose Start+End PartC:
+    public static final Pose2d pathApartCstartPose =
+    new Pose2d(Units.inchesToMeters(+72.0), Units.inchesToMeters(+252.0), new Rotation2d(Units.degreesToRadians(-90)));
+    public static final Pose2d pathApartCendPose = 
+    new Pose2d(Units.inchesToMeters(+90.0), Units.inchesToMeters(+30.0), new Rotation2d(Units.degreesToRadians(-90)));
     }
+
+    // copied from chief delphi example
+    public static final class DriveConstants {
+        // Feedforward Analysis: kS
+        public static final double ksVolts = 0.0799;
+        // Feedforward Analysis: kV
+        public static final double kvVoltSecondsPerMeter = 0.129;
+        // Feedforward Analysis: kA
+        public static final double kaVoltSecondsSquaredPerMeter = 0.018;
+        // Optimal Controller Gain for preset "WPILib (2020-)": kP
+        public static final double kPDriveVel = 0.804;
+
+        // check this width
+        public static final double kTrackwidthMeters = Units.inchesToMeters(19.75);
+        public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackwidthMeters);
+        
+        public static final int kLeftMotor00CanBusID = 10;
+        public static final int kLeftMotor01CanBusID = 11;
+        public static final int kRightMotor02CanBusID = 12;
+        public static final int kRightMotor03CanBusID = 13;
+        public static final double kSlowMaxSpeed = 0.5;
+        public static final double kMaxSpeed = 0.9;
+      }
 
 
     // on / off switches
@@ -56,46 +108,24 @@ public final class Constants {
 	
     // XBox mappings
     /*  kBumperLeft(5)  --> half speed driving
-        kBumperRight(6) --> extend elbow
-        kStickLeft(9)   --> conveyor empty
+        kBumperRight(6) --> 
+        kStickLeft(9)   --> 
         kStickRight(10) --> 
-        kA(1)           --> intake
-        kB(2)           --> conveyor one ball pulse
-        kX(3)           --> disable climbarm
-        kY(4)           --> switch camera
-        kBack(7)        --> intake reverse
+        kA(1)           --> 
+        kB(2)           --> 
+        kX(3)           --> 
+        kY(4)           --> 
+        kBack(7)        --> 
         kStart(8)       --> 
     */
-    public static int kIntakeButton = XboxController.Button.kA.value;   
-    public static int kConveyorPulseButton = XboxController.Button.kB.value;   
-    public static int kClimbOffButton = XboxController.Button.kX.value;
-    public static int kSwitchCameraButton = XboxController.Button.kY.value;   
     public static int kSlowDown = XboxController.Button.kBumperLeft.value;
-    public static int kElbowExtend = XboxController.Button.kBumperRight.value;
-	public static int kIntakeReverseButton = XboxController.Button.kBack.value;
-    public static int kConveyorEmptyButton = XboxController.Button.kStickLeft.value;
        
     public final class OIConstants{
         public static final int kDriverControllerPort = 0;
-        public static final int kTrustMasterPort = 1;
-        // d-pad positions
-        public static final int kClimbArmUp = 0;
-        public static final int kClimbArmExtend = 90;
-        public static final int kWinchOnToggle = 180;
-        public static final int kClimbArmDownToggle = 270;
-		
     }
     public final class AutoConstants {
         public static final double kTimeOut = 1.0;
 		public static final double kPower = -0.8;
-    }
-    public final class DriveConstants{
-        public static final int kLeftMotor00CanBusID = 10;
-        public static final int kLeftMotor01CanBusID = 11;
-        public static final int kRightMotor02CanBusID = 12;
-        public static final int kRightMotor03CanBusID = 13;
-        public static final double kSlowMaxSpeed = 0.5;
-		public static final double kMaxSpeed = 0.9;
     }
     
 }

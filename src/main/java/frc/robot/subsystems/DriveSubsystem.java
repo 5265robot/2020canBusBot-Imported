@@ -16,6 +16,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -43,10 +47,13 @@ public class DriveSubsystem extends SubsystemBase {
   private AHRS m_ahrs;
    // new AHRS(SPI.Port.kMXP);
 
-  //private final Encoder m_testEncoder = new Encoder(0, 1, false, EncodingType.k4X);
-  /**
-   * Creates a new ExampleSubsystem.
-   */
+  // Set up odometry class
+  private DifferentialDriveOdometry m_odometry;
+  public Pose2d m_pose;
+
+  // Set up field diagram
+  private final Field2d m_field2D = new Field2d();
+  
   public DriveSubsystem() {
     // pairing the motors
     m_oneWheel.follow(m_zeroWheel);
@@ -61,9 +68,10 @@ public class DriveSubsystem extends SubsystemBase {
       /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
       /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
       m_ahrs = new AHRS(SPI.Port.kMXP); 
-  } catch (RuntimeException ex ) {
-      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
-  }
+    } catch (RuntimeException ex ) {
+        DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+    }
+    m_odometry = new DifferentialDriveOdometry(m_ahrs.getRotation2d());
   }
 
   // 
@@ -94,7 +102,38 @@ public class DriveSubsystem extends SubsystemBase {
       m_drive.setMaxOutput(DriveConstants.kMaxSpeed); 
     }
     Constants.powerState = !Constants.powerState;
-  } // end winchOn
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    m_leftMotors.setVoltage(leftVolts);
+    m_rightMotors.setVoltage(-rightVolts); // We invert this to maintain +ve = forward
+    m_drive.feed();
+  }
+
+  /**
+   * Returns the currently estimated pose of the robot.
+   * @return The pose
+   */
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+  /**
+   * Returns the current wheel speeds of the robot.
+   * @return The current wheel speeds
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(m_leftMotors.get(),m_rightMotors.get());
+  }
+
+  /**
+   * Resets the odometry to the specified pose
+   * @param pose The pose to which to set the odometry
+   */
+  public void resetOdometry(Pose2d pose) {
+    // resetEncoders();
+    // m_ahrs.reset();
+    m_odometry.resetPosition(pose, m_ahrs.getRotation2d());
+  }
 
   @Override
   public void periodic() {
