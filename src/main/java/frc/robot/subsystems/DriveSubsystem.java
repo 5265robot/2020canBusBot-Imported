@@ -7,6 +7,10 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -36,8 +40,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive m_drive =
     new DifferentialDrive(m_leftMotors, m_rightMotors);
 
-  //private final AHRS m_ahrs =
-  //  new AHRS(SPI.Port.kMXP);
+  private AHRS m_ahrs;
+   // new AHRS(SPI.Port.kMXP);
 
   //private final Encoder m_testEncoder = new Encoder(0, 1, false, EncodingType.k4X);
   /**
@@ -51,11 +55,24 @@ public class DriveSubsystem extends SubsystemBase {
     //
     m_drive.setDeadband(0.15);
     m_drive.setMaxOutput(DriveConstants.kMaxSpeed);
+
+    try {
+      /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
+      /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
+      /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+      m_ahrs = new AHRS(SPI.Port.kMXP); 
+  } catch (RuntimeException ex ) {
+      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+  }
   }
 
   // 
   public void arcadeDrive(double fwd, double rot){
     m_drive.arcadeDrive(-fwd*Math.abs(fwd), rot);
+  }
+
+  public void curveDrive(double fwd, double rot, boolean qT){
+    m_drive.curvatureDrive(fwd, rot, qT);
   }
 
   // straight driving... needs gyro added

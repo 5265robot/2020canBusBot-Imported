@@ -52,10 +52,6 @@ public final class Constants {
 
 
     // on / off switches
-    public static boolean currentIntakeState = false;
-    public static boolean cameraState = false;
-    public static boolean armExtended = false;
-    public static boolean winchState = false;
 	public static boolean powerState = false;
 	
     // XBox mappings
@@ -78,11 +74,7 @@ public final class Constants {
     public static int kElbowExtend = XboxController.Button.kBumperRight.value;
 	public static int kIntakeReverseButton = XboxController.Button.kBack.value;
     public static int kConveyorEmptyButton = XboxController.Button.kStickLeft.value;
-    
-    // thrustmaster buttons
-	public static int kThrustPulseButton = 9;
-
-    
+       
     public final class OIConstants{
         public static final int kDriverControllerPort = 0;
         public static final int kTrustMasterPort = 1;
@@ -105,41 +97,5 @@ public final class Constants {
         public static final double kSlowMaxSpeed = 0.5;
 		public static final double kMaxSpeed = 0.9;
     }
-    public final class IntakeConstants{
-        public static final int kLowerMotorPWM = 2;
-        public static final int kUpperMotorPWM = 1;
-        public static final int kIntakeMotorPWM = 4;
-        public static final double kIntakePower = 0.4; // 0.3
-        public static final double kConveyorPulsePower = -0.4;
-		public static final double kConveyorFullPower = -0.6; //-0.6
-		public static final double kConveyorFiveBallEmpty = 2.0;
-        public static final double kConveyorOneBallPulse = 0.13;
-		public static final double kUpperLowerRatio = 1.5; // original 1.0, changed to put top spin on ball
-        public static final double kLowerTime = 0.15; //0.13
-        public static final double kUpperTime = 0.15;
-        /*
-        public static final double kUpperPower = -0.6;
-        public static final double kLowerPower = -0.6; // -0.4 upped for arm passage
-		*/
-    }
-    public final class ArmConstants{
-        public static final int kArmMotorPWM = 0;
-        public static final int kWinchPWM = 3;
-        public static final double kArmPower = 0.3;
-        // postive, rachet CW; negative, rachet CCW
-		public static final double kWinchPower = -1.0;//-0.5
-		public static final int kchannelA = 0;
-        public static final int kchannelB = 1;
-        public static final double kSetPoint = -315.0;
-        public static final double kSetTolerance = 0.10;
-		public static final double kEncoderP = 0.0016;
-		public static final double kEncoderI = 0.0;
-        public static final double kEncoderD = 0.0;
-        public static final double countsPerRevolution = 7.0;
-        public static final double reduction = 71.1;
-		public static final int kPinchSolenoidPortA = 2;
-		public static final int kPinchSolenoidPortB = 3;
-		public static final int kArmSolenoidPortA = 0;
-		public static final int kArmSolenoidPortB = 1;
-    }
+    
 }
