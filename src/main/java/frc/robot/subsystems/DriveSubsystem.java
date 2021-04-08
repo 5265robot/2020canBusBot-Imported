@@ -11,6 +11,8 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Spark;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -20,12 +22,18 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
 
 public class DriveSubsystem extends SubsystemBase {
   // drn --
+
+  // intake
+  private final Spark m_intake = new Spark(IntakeConstants.kIntake);
+
   // motors, motor groups, and drive
   private final CANSparkMax m_zeroWheel = 
     new CANSparkMax(DriveConstants.kLeftMotor00CanBusID, MotorType.kBrushless);
@@ -58,7 +66,9 @@ public class DriveSubsystem extends SubsystemBase {
     // pairing the motors
     m_oneWheel.follow(m_zeroWheel);
     m_twoWheel.follow(m_threeWheel);
-    //m_ahrs.     need to set up gyro
+    // encoder setup
+    m_zeroWheel.getEncoder().setPosition(0.0);
+
     //
     m_drive.setDeadband(0.15);
     m_drive.setMaxOutput(DriveConstants.kMaxSpeed);
@@ -130,15 +140,34 @@ public class DriveSubsystem extends SubsystemBase {
    * @param pose The pose to which to set the odometry
    */
   public void resetOdometry(Pose2d pose) {
-    // resetEncoders();
+    // reset Encoders
+    m_zeroWheel.getEncoder().setPosition(0.0);
+    m_oneWheel.getEncoder().setPosition(0.0);
+    m_twoWheel.getEncoder().setPosition(0.0);
+    m_threeWheel.getEncoder().setPosition(0.0);
     // m_ahrs.reset();
+    System.out.print("odometry reset");
     m_odometry.resetPosition(pose, m_ahrs.getRotation2d());
+  }
+
+  public void intakeOn (){
+    m_intake.set(IntakeConstants.kIntakeSpeed);
+    System.out.println("Intake on");
+  }
+
+  public void intakeOff (){
+    m_intake.set(0.0);
+    System.out.println("Intake Off");
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+public void gyroReset() {
+  m_ahrs.reset();
+}
 
 
 }

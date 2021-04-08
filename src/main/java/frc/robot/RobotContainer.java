@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.ejml.dense.block.MatrixOps_DDRB;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.XboxController;
@@ -117,19 +119,36 @@ public class RobotContainer {
         m_robotDrive::getWheelSpeeds, new PIDController(DriveConstants.kPDriveVel, 0, 0),
         new PIDController(DriveConstants.kPDriveVel, 0, 0), m_robotDrive::tankDriveVolts, m_robotDrive);
 
+    m_robotDrive.gyroReset();
     m_robotDrive.resetOdometry(pathApartATrajectory.getInitialPose());
 
     return new InstantCommand(
       () -> m_robotDrive.resetOdometry(pathApartATrajectory.getInitialPose()),m_robotDrive)
-      .andThen(pathApartAramseteCommand).andThen(pathApartBramseteCommand).andThen(pathApartCramseteCommand)
+      //.andThen(() -> System.out.print("instant A")
+      .andThen(pathApartAramseteCommand) //.andThen(pathApartBramseteCommand).andThen(pathApartCramseteCommand)
+      //.andThen(System.out.print("instant B")
       .andThen(new InstantCommand(() -> m_robotDrive.tankDriveVolts(0, 0),m_robotDrive));
+      //.andThen(System.out.print("instant C");
     }
 
 
   private void configureButtonBindings() {
     // speed
     final JoystickButton slowDown = new JoystickButton(m_xboxController, Constants.kSlowDown);
-    slowDown.whenPressed(() -> m_robotDrive.halfPower());
+      slowDown.whenPressed(() -> m_robotDrive.halfPower());
+
+    //Intake Button On
+    final JoystickButton intakeOnButton = new JoystickButton(m_xboxController, Constants.kA);
+      intakeOnButton.whenPressed(() -> m_robotDrive.intakeOn());
+    //Intake Button Off
+    final JoystickButton intakeoffButton = new JoystickButton(m_xboxController, Constants.kB);
+      intakeoffButton.whenPressed(() -> m_robotDrive.intakeOff());
+    final JoystickButton circleButton = new JoystickButton(m_xboxController, Constants.kY);
+    circleButton.whenPressed(() -> new StartEndCommand(
+      () -> m_robotDrive.arcadeDrive(.5,.75),
+      () -> m_robotDrive.arcadeDrive(0.0, 0.0),m_robotDrive)
+        .withTimeout(Constants.AutoConstants.kCircum));
+
   } // end configureButtonBindins
 
   /**

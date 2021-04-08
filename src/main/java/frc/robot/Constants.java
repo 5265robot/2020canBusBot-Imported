@@ -10,6 +10,7 @@ package frc.robot;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -29,8 +30,8 @@ import edu.wpi.first.wpilibj.util.Units;
 public final class Constants {
     // auto for Ramsete
     public static final class rAutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 0.8; // was 0.8
-        public static final double kMaxAccelerationMetersPerSecondSquared = 0.80; // was 0.8
+        public static final double kMaxSpeedMetersPerSecond = 0.75; // was 0.8
+        public static final double kMaxAccelerationMetersPerSecondSquared = 0.750; // was 0.8
     
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;
@@ -43,9 +44,10 @@ public final class Constants {
 
     //Path 1 Points:
         public static final List<Translation2d> pathApartAPoints = List.of(
-                new Translation2d(Units.inchesToMeters(+30.0), Units.inchesToMeters(+16.0)),
-                new Translation2d(Units.inchesToMeters(+22.0), Units.inchesToMeters(+10.0))
-                );
+                new Translation2d(Units.inchesToMeters(+30.0), Units.inchesToMeters(+120.0)),
+                new Translation2d(Units.inchesToMeters(+30.0), Units.inchesToMeters(+140.0))
+                //new Translation2d(Units.inchesToMeters(+44.0), Units.inchesToMeters(+146.0))
+                ); //30,16 and 22,10
 
         public static final List<Translation2d> pathApartBPoints = List.of(
                 new Translation2d(Units.inchesToMeters(+16.0), Units.inchesToMeters(+16.0)),
@@ -61,9 +63,11 @@ public final class Constants {
 
     //Pose Start+End PartA:
         public static final Pose2d pathApartAstartPose =
-                new Pose2d(Units.inchesToMeters(+90.0), Units.inchesToMeters(+30.0), new Rotation2d(Units.degreesToRadians(-90)));
+                new Pose2d(Units.inchesToMeters(+30.0), Units.inchesToMeters(+90.0), new Rotation2d(Units.degreesToRadians(+90)));
+                // 90, 30, 90
         public static final Pose2d pathApartAendPose = 
-                new Pose2d(Units.inchesToMeters(+90.0), Units.inchesToMeters(+138.0), new Rotation2d(Units.degreesToRadians(-90)));
+                new Pose2d(Units.inchesToMeters(+30.0), Units.inchesToMeters(+160.0), new Rotation2d(Units.degreesToRadians(-70)));
+                // 90,138
 
     //Pose Start+End PartB:
         public static final Pose2d pathApartBstartPose =
@@ -81,13 +85,13 @@ public final class Constants {
     // copied from chief delphi example
     public static final class DriveConstants {
         // Feedforward Analysis: kS
-        public static final double ksVolts = 0.0799;
+        public static final double ksVolts = 0.0785;
         // Feedforward Analysis: kV
-        public static final double kvVoltSecondsPerMeter = 0.129;
+        public static final double kvVoltSecondsPerMeter = 0.124;
         // Feedforward Analysis: kA
         public static final double kaVoltSecondsSquaredPerMeter = 0.018;
         // Optimal Controller Gain for preset "WPILib (2020-)": kP
-        public static final double kPDriveVel = 0.804;
+        public static final double kPDriveVel = 0.806;
 
         // check this width
         public static final double kTrackwidthMeters = Units.inchesToMeters(19.75);
@@ -104,7 +108,7 @@ public final class Constants {
 
 
     // on / off switches
-	public static boolean powerState = false;
+    public static boolean powerState = false;
 	
     // XBox mappings
     /*  kBumperLeft(5)  --> half speed driving
@@ -119,13 +123,24 @@ public final class Constants {
         kStart(8)       --> 
     */
     public static int kSlowDown = XboxController.Button.kBumperLeft.value;
+    public static int kA = XboxController.Button.kA.value;
+    public static int kB = XboxController.Button.kB.value;
+    public static int kY = XboxController.Button.kY.value;
        
     public final class OIConstants{
         public static final int kDriverControllerPort = 0;
     }
     public final class AutoConstants {
         public static final double kTimeOut = 1.0;
-		public static final double kPower = -0.8;
+        public static final double kPower = -0.8;
+        public static final double kLongSide = 5.0;
+        public static final double kShortSide = 1.5;
+        public static final double kCircum = 5.0;
+    }
+
+    public final class IntakeConstants{
+        public static final int kIntake = 0;
+        public static final double kIntakeSpeed = -0.52;
     }
     
 }
